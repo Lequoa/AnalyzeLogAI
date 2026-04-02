@@ -3,7 +3,7 @@
 ## 🚀 Overview
 The **AI-Powered Log Analyzer** is a lightweight C# application that leverages a locally hosted Large Language Model (LLM) via Ollama to analyze system logs and provide intelligent insights.
 
-The application helps developers and support teams quickly understand errors, identify root causes, and receive actionable recommendations—reducing debugging time and improving system reliability.
+The application helps developers and support teams quickly understand errors, identify root causes, and receive actionable recommendations-reducing debugging time and improving system reliability.
 
 ---
 
@@ -162,7 +162,6 @@ Feel free to fork the repository and improve:
 - Prompt engineering
 - Model tuning
 - Performance optimizations
-- UI/UX enhancements
 
 ---
 
