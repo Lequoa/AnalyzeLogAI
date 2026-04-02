@@ -41,7 +41,7 @@ namespace AnalyzeLogAI
 
             while (true)
             {
-                Console.Write("Enter log to analyze:");
+                Console.Write("Enter log to analyze: ");
 
                 string? logInput = Console.ReadLine();
 
