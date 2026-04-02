@@ -17,7 +17,7 @@ namespace AnalyzeLogAI.Services
             var requestBody = new
             {
                 model = ollamaSettings.Value.Model,
-                prompt = $"{LogAnalyzerConstants.propmt}:\n{logInput}",
+                prompt = $"{ollamaSettings.Value.Prompt}:\n{logInput}",
                 stream = false
             };
 

@@ -18,7 +18,7 @@ namespace AnalyzeLogAI
                                                        .Build();
 
             var provider = new ServiceCollection().AddSingleton(_configuration)
-                                                  .Configure<OllamaSettings>(_configuration.GetSection("Ollama"))  // ✅ bind
+                                                  .Configure<OllamaSettings>(_configuration.GetSection("Ollama"))
                                                   .AddHttpClient("ollama", client =>
                                                   {
                                                       var settings = _configuration.GetSection("Ollama").Get<OllamaSettings>()!;
@@ -41,7 +41,7 @@ namespace AnalyzeLogAI
 
             while (true)
             {
-                Console.WriteLine("Enter log to analyze:");
+                Console.Write("Enter log to analyze:");
 
                 string? logInput = Console.ReadLine();
 
