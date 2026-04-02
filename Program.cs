@@ -1,21 +1,31 @@
-﻿using AnalyzeLogAI.Services;
+﻿using AnalyzeLogAI.Models;
+using AnalyzeLogAI.Services;
 using AnalyzeLogAI.Services.IService;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AnalyzeLogAI
 {
     internal class Program
     {
-        private static ILogAnaylzer _logAnaylzer;
+        private static readonly ILogAnaylzer _logAnaylzer;
+        private static readonly IConfiguration _configuration;
 
         static Program()
         {
-            var provider = new ServiceCollection().AddHttpClient("ollama", client =>
-            {
-                client.BaseAddress = new Uri("http://localhost:11434");
-                client.Timeout = TimeSpan.FromMinutes(10);
-            }).Services.AddTransient<ILogAnaylzer, LogAnaylzer>()
-                       .BuildServiceProvider();
+            _configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                                                       .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                                                       .Build();
+
+            var provider = new ServiceCollection().AddSingleton(_configuration)
+                                                  .Configure<OllamaSettings>(_configuration.GetSection("Ollama"))  // ✅ bind
+                                                  .AddHttpClient("ollama", client =>
+                                                  {
+                                                      var settings = _configuration.GetSection("Ollama").Get<OllamaSettings>()!;
+                                                      client.BaseAddress = new Uri(settings.BaseUrl);
+                                                      client.Timeout = TimeSpan.FromMinutes(settings.TimeoutMinutes);
+                                                  }).Services.AddTransient<ILogAnaylzer, LogAnaylzer>()
+                                                             .BuildServiceProvider();
 
             _logAnaylzer = provider.GetRequiredService<ILogAnaylzer>();
         }
@@ -34,6 +44,12 @@ namespace AnalyzeLogAI
                 Console.WriteLine("Enter log to analyze:");
 
                 string? logInput = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(logInput))
+                {
+                    Console.WriteLine("Promt is empty please fill in the prompt.");
+                    continue;
+                }
 
                 var response = await _logAnaylzer.AnalyzeLog(logInput);
 

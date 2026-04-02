@@ -1,12 +1,14 @@
 ﻿using System.Text;
 using AnalyzeLogAI.ConsoleUI.Utils;
 using AnalyzeLogAI.Constants;
+using AnalyzeLogAI.Models;
 using AnalyzeLogAI.Services.IService;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace AnalyzeLogAI.Services
 {
-    internal class LogAnaylzer(IHttpClientFactory factory) : ILogAnaylzer
+    internal class LogAnaylzer(IHttpClientFactory factory, IOptions<OllamaSettings> ollamaSettings) : ILogAnaylzer
     {
         public async Task<string> AnalyzeLog(string logInput)
         {
@@ -14,7 +16,7 @@ namespace AnalyzeLogAI.Services
 
             var requestBody = new
             {
-                model = "my-csharp-assistant",
+                model = ollamaSettings.Value.Model,
                 prompt = $"{LogAnalyzerConstants.propmt}:\n{logInput}",
                 stream = false
             };
