@@ -1,8 +1,6 @@
-﻿using System.Text;
-using AnalyzeLogAI.Services;
+﻿using AnalyzeLogAI.Services;
 using AnalyzeLogAI.Services.IService;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 namespace AnalyzeLogAI
 {
@@ -24,44 +22,28 @@ namespace AnalyzeLogAI
 
         static async Task Main(string[] args)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("╔══════════════════════════════════════════════════════╗");
             Console.WriteLine("║           ERROR LOG ANALYZER  v1.0                   ║");
             Console.WriteLine("╚══════════════════════════════════════════════════════╝");
             Console.ResetColor();
             Console.WriteLine();
 
-            Console.WriteLine("Enter log to analyze:");
-
-            string? logInput = Console.ReadLine();
-
-            var cts = new CancellationTokenSource();
-
-            var spinner = ShowSpinner(cts.Token);
-
-            await Task.Delay(3000); // simulate work
-
-            var response = await _logAnaylzer.AnalyzeLog(logInput);
-
-            cts.Cancel();
-
-            await spinner;
-
-            Console.WriteLine();
-
-            Console.WriteLine("Done!!!");
-
-            Console.WriteLine(response);
-        }
-
-        static async Task ShowSpinner(CancellationToken ctx)
-        {
-            var frames = new[] { '|', '/', '-', '\\' };
-            int i = 0;
-            while (!ctx.IsCancellationRequested)
+            while (true)
             {
-                Console.Write($"\r Loading... {frames[i++ % frames.Length]}");
-                await Task.Delay(100, ctx).ContinueWith(_ => { }); // swallow cancellation
+                Console.WriteLine("Enter log to analyze:");
+
+                string? logInput = Console.ReadLine();
+
+                var response = await _logAnaylzer.AnalyzeLog(logInput);
+
+                Console.WriteLine();
+
+                Console.WriteLine("Done!!!");
+
+                Console.WriteLine(response);
+
+                Console.WriteLine();
             }
         }
     }

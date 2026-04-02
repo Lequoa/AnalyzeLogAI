@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
+using AnalyzeLogAI.ConsoleUI.Utils;
 using AnalyzeLogAI.Constants;
 using AnalyzeLogAI.Services.IService;
 using Newtonsoft.Json;
@@ -19,13 +15,25 @@ namespace AnalyzeLogAI.Services
             var requestBody = new
             {
                 model = "my-csharp-assistant",
-                prompt = $"{LogAnalyzerConstants.propmtation}:\n{logInput}",
+                prompt = $"{LogAnalyzerConstants.propmt}:\n{logInput}",
                 stream = false
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync("/api/generate", content);
+            var cts = new CancellationTokenSource();
+
+            var spinnerTask = UtilsUI.ShowSpinner(cts.Token);
+
+            var ollamaTask = client.PostAsync("/api/generate", content);
+
+            var response = await ollamaTask;
+
+            cts.Cancel();
+
+            await spinnerTask;
+
+            Console.Write("\r                          \r");
 
             response.EnsureSuccessStatusCode();
 
