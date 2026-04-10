@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using AnalyzeLogAI.ConsoleUI.Utils;
-using AnalyzeLogAI.Constants;
 using AnalyzeLogAI.Models;
 using AnalyzeLogAI.Services.IService;
 using Microsoft.Extensions.Options;
